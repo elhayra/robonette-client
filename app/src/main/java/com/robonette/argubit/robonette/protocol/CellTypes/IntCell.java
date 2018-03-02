@@ -1,5 +1,7 @@
 package com.robonette.argubit.robonette.protocol.CellTypes;
 
+import com.robonette.argubit.robonette.protocol.InfoMsg;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 

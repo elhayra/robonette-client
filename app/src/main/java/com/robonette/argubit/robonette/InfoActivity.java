@@ -38,14 +38,19 @@ public class InfoActivity extends AppCompatActivity implements TcpClientListener
         TcpClientSingletone.getInstance().subscribe(this);
     }
 
-    private void updateListViewItem(int index, String data){
-        View v = listView.getChildAt(index - listView.getFirstVisiblePosition());
+    private void updateListViewItem(final int index, final String data)
+    {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                View v = listView.getChildAt(index - listView.getFirstVisiblePosition());
 
-        if(v == null)
-            return;
+                if(v == null)
+                    return;
 
-        TextView someText = (TextView) v.findViewById(R.id.textView2);
-        someText.setText(data);
+                TextView someText = (TextView) v.findViewById(R.id.textView2);
+                someText.setText(data);
+            }
+        });
     }
 
     public void OnTcpConnected(boolean connected) {}
@@ -54,6 +59,9 @@ public class InfoActivity extends AppCompatActivity implements TcpClientListener
     {
         InfoMsg msg = new InfoMsg();
         msg.fromBytes(bytes);
+
+        int data = msg.getDataInt();
+        updateListViewItem(0, String.valueOf(data));
     }
 
 

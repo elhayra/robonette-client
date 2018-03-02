@@ -33,12 +33,23 @@ public class InfoMsg
     BoolCell dataBool;
     StringCell dataString;
 
-    private enum DataType
+    public DataType getDataType() { return DataType.fromInteger(dataType.getValue()); }
+    public String getDataTag() { return dataTag.getValue(); }
+    public String getDataUnits() { return dataTag.getValue(); }
+
+    public int getDataInt() { return dataInt.getValue(); }
+    public float getDataFloat32() { return dataFloat32.getValue(); }
+    public double getDataFloat64() { return dataFloat64.getValue(); }
+    public byte getDataByte() { return dataByte.getValue(); }
+    public boolean getDataBool() { return dataBool.getValue(); }
+    public String getDataString() { return dataString.getValue(); }
+
+    public enum DataType
     {
         INT32   (1),
         FLOAT32 (2),
         FLOAT64 (3),
-        UBYTE   (4),
+        BYTE   (4),
         BOOL    (5),
         STRING  (6);
         private int value;
@@ -53,7 +64,7 @@ public class InfoMsg
                 case 3:
                     return FLOAT64;
                 case 4:
-                    return UBYTE;
+                    return BYTE;
                 case 5:
                     return BOOL;
                 case 6:
@@ -68,29 +79,18 @@ public class InfoMsg
         if (bytes.length == SIZE)
         {
             /* fetch single byte info from bytes array */
-            dataType.setValue((char)bytes[dataType.getIndex()]);
+            dataType.fromBytes(bytes);
 
-            /* build sub-arrays for cells size bigger than 1 byte */
-            byte [] dataTagArr = Arrays.copyOfRange(bytes,
-                    dataTag.getIndex(),
-                    dataTag.getIndex() + StringCell.SIZE);
-            dataTag.fromBytes(dataTagArr);
+            dataTag.fromBytes(bytes);
 
-            byte [] dataUnitsArr = Arrays.copyOfRange(bytes,
-                    dataUnits.getIndex(),
-                    dataUnits.getIndex() + StringCell.SIZE);
-            dataUnits.fromBytes(dataUnitsArr);
-
-            byte [] dataArr = Arrays.copyOfRange(bytes,
-                    DATA_INDEX,
-                    DATA_INDEX + DATA_SIZE);
+            dataUnits.fromBytes(bytes);
 
             switch (DataType.fromInteger(dataType.getValue()))
             {
                 case INT32:
                 {
                     dataInt = new IntCell(DATA_INDEX);
-                    dataInt.fromBytes(dataArr);
+                    dataInt.fromBytes(bytes);
                     break;
                 }
                 case FLOAT32:
@@ -103,7 +103,7 @@ public class InfoMsg
                     dataFloat64 = new Float64Cell(DATA_INDEX);
                     break;
                 }
-                case UBYTE:
+                case BYTE:
                 {
                     dataByte = new UByteCell(DATA_INDEX);
                     break;

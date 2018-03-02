@@ -1,5 +1,7 @@
 package com.robonette.argubit.robonette.protocol.CellTypes;
 
+import java.util.Arrays;
+
 public class StringCell extends PacketCell
 {
     public static final int SIZE = 20;
@@ -15,7 +17,11 @@ public class StringCell extends PacketCell
 
     public void fromBytes(byte [] bytes)
     {
-        value = new String (bytes);
+        /* build sub-arrays for cells size bigger than 1 byte */
+        byte [] dataTagArr = Arrays.copyOfRange(bytes,
+                getIndex(),
+                getIndex() + StringCell.SIZE);
+        value = new String (dataTagArr);
     }
 
     public String getValue() { return value; }

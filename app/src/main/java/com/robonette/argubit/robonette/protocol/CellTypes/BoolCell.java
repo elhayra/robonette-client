@@ -22,4 +22,6 @@ public class BoolCell extends PacketCell
     public boolean isValue() { return value; }
 
     public void setValue(boolean value) { this.value = value; }
+
+    public boolean getValue() { return value; }
 }

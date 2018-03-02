@@ -5,23 +5,22 @@ package com.robonette.argubit.robonette.protocol.CellTypes;
 public class UByteCell extends PacketCell
 {
     public static final int SIZE = 1;
-    private char value;
+    private byte value;
 
     public UByteCell(int index) { super(index); }
 
-    public UByteCell(int index, char value)
+    public UByteCell(int index, byte value)
     {
         super(index);
         setValue(value);
     }
 
-    @Override
     public void fromBytes(byte [] bytes)
     {
-
+        value = bytes[getIndex()];
     }
 
-    public char getValue() { return value; }
+    public byte getValue() { return value; }
 
-    public void setValue(char value) { this.value = value; }
+    public void setValue(byte value) { this.value = value; }
 }
