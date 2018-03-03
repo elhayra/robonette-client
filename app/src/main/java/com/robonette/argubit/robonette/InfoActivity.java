@@ -38,7 +38,10 @@ public class InfoActivity extends AppCompatActivity implements TcpClientListener
         TcpClientSingletone.getInstance().subscribe(this);
     }
 
-    private void updateListViewItem(final int index, final String data)
+    private void updateListViewItem(final int index,
+                                    final String tag,
+                                    final String data,
+                                    final String units)
     {
         this.runOnUiThread(new Runnable() {
             public void run() {
@@ -47,8 +50,13 @@ public class InfoActivity extends AppCompatActivity implements TcpClientListener
                 if(v == null)
                     return;
 
-                TextView someText = (TextView) v.findViewById(R.id.textView2);
-                someText.setText(data);
+                TextView tagTxt = (TextView) v.findViewById(R.id.textView1);
+                TextView dataTxt = (TextView) v.findViewById(R.id.textView2);
+                TextView unitsTxt = (TextView) v.findViewById(R.id.textView3);
+
+                tagTxt.setText(tag);
+                dataTxt.setText(data);
+                unitsTxt.setText(units);
             }
         });
     }
@@ -58,10 +66,15 @@ public class InfoActivity extends AppCompatActivity implements TcpClientListener
     public void OnTcpIncoming(byte [] bytes)
     {
         InfoMsg msg = new InfoMsg();
-        msg.fromBytes(bytes);
 
-        int data = msg.getDataInt();
-        updateListViewItem(0, String.valueOf(data));
+        if (msg.fromBytes(bytes))
+        {
+            int data = msg.getDataInt();
+            updateListViewItem(0,
+                    msg.getDataTag(),
+                    String.valueOf(data),
+                    msg.getDataUnits());
+        }
     }
 
 

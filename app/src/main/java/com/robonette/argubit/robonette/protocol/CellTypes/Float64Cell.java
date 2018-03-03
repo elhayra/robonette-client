@@ -13,10 +13,9 @@ public class Float64Cell extends PacketCell
         setValue(value);
     }
 
-    @Override
-    public void fromBytes(byte [] bytes)
+    public boolean fromBytes(byte [] bytes)
     {
-
+        return true;
     }
 
     public double getValue() { return value; }

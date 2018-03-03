@@ -34,11 +34,11 @@ public class TcpClientSingletone extends Thread
 
     public static TcpClientSingletone getInstance()
     {
-        if(instance == null)
+        if (instance == null)
         {
             synchronized (TcpClientSingletone.class)
             {
-                if(instance == null)
+                if (instance == null)
                 {
                     instance = new TcpClientSingletone();
                     instance.start();
@@ -48,7 +48,10 @@ public class TcpClientSingletone extends Thread
         return instance;
     }
 
-    public boolean isConnected() { return tcpClient.isConnected(); }
+    public boolean isConnected()
+    {
+        return tcpClient.isConnected();
+    }
 
     public void run()
     {
@@ -65,11 +68,11 @@ public class TcpClientSingletone extends Thread
             /* listen to incoming bytes */
             if (connected)
             {
-                char [] bytes = new char[buffSize];
+                byte [] bytes = new byte[buffSize];
                 int bytesRead = tcpClient.readBytes(bytes, buffSize);
                 if (bytesRead > 0)
                 {
-                    notifyIncoming(charsToBytes(bytes));
+                    notifyIncoming(bytes);
                 }
             }
         }
@@ -121,22 +124,10 @@ public class TcpClientSingletone extends Thread
             listener.OnTcpConnected(state);
     }
 
-    private void notifyIncoming(byte [] bytes)
+    private void notifyIncoming(byte[] bytes)
     {
+        int a = bytes.length;
         for (TcpClientListener listener : subscribers)
             listener.OnTcpIncoming(bytes);
     }
-
-    private static byte[] charsToBytes(char[] chars)
-    {
-        CharBuffer charBuff = CharBuffer.wrap(chars);
-        ByteBuffer byteBuff = Charset.forName("UTF-8").encode(charBuff);
-        byte[] bytes = Arrays.copyOfRange(byteBuff.array(),
-                byteBuff.position(), byteBuff.limit());
-        return bytes;
-    }
-
-
-
-
 }

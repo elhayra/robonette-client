@@ -3,11 +3,9 @@ package com.robonette.argubit.robonette.protocol;
 import com.robonette.argubit.robonette.protocol.CellTypes.BoolCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.Float32Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.Float64Cell;
-import com.robonette.argubit.robonette.protocol.CellTypes.IntCell;
+import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.StringCell;
-import com.robonette.argubit.robonette.protocol.CellTypes.UByteCell;
-
-import java.util.Arrays;
+import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
 
 public class InfoMsg
 {
@@ -18,24 +16,24 @@ public class InfoMsg
 
     /* packet cells */
 
-    UByteCell dataType = new UByteCell(0);
-    StringCell dataTag = new StringCell(dataType.getIndex() + UByteCell.SIZE);
+    ByteCell dataType = new ByteCell(0);
+    StringCell dataTag = new StringCell(dataType.getIndex() + ByteCell.SIZE);
     StringCell dataUnits = new StringCell(dataTag.getIndex() + StringCell.SIZE);
     int DATA_INDEX = dataUnits.getIndex() + StringCell.SIZE;
 
     /* one of this data types will be used dynamically */
     /* according to incoming package data type         */
 
-    IntCell dataInt;
+    Int32Cell dataInt;
     Float32Cell dataFloat32;
     Float64Cell dataFloat64;
-    UByteCell dataByte;
+    ByteCell dataByte;
     BoolCell dataBool;
     StringCell dataString;
 
     public DataType getDataType() { return DataType.fromInteger(dataType.getValue()); }
     public String getDataTag() { return dataTag.getValue(); }
-    public String getDataUnits() { return dataTag.getValue(); }
+    public String getDataUnits() { return dataUnits.getValue(); }
 
     public int getDataInt() { return dataInt.getValue(); }
     public float getDataFloat32() { return dataFloat32.getValue(); }
@@ -49,7 +47,7 @@ public class InfoMsg
         INT32   (1),
         FLOAT32 (2),
         FLOAT64 (3),
-        BYTE   (4),
+        BYTE    (4),
         BOOL    (5),
         STRING  (6);
         private int value;
@@ -89,7 +87,7 @@ public class InfoMsg
             {
                 case INT32:
                 {
-                    dataInt = new IntCell(DATA_INDEX);
+                    dataInt = new Int32Cell(DATA_INDEX);
                     dataInt.fromBytes(bytes);
                     break;
                 }
@@ -105,7 +103,7 @@ public class InfoMsg
                 }
                 case BYTE:
                 {
-                    dataByte = new UByteCell(DATA_INDEX);
+                    dataByte = new ByteCell(DATA_INDEX);
                     break;
                 }
                 case BOOL:

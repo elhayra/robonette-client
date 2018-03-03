@@ -10,18 +10,15 @@ public class BoolCell extends PacketCell
     public BoolCell(int index, boolean value)
     {
         super(index);
-        setValue(value);
+        this.value = value;
     }
 
-    @Override
-    public void fromBytes(byte [] bytes)
+    public boolean fromBytes(byte [] bytes)
     {
-
+        return true;
     }
 
     public boolean isValue() { return value; }
-
-    public void setValue(boolean value) { this.value = value; }
 
     public boolean getValue() { return value; }
 }

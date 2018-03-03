@@ -5,5 +5,5 @@ public abstract class PacketCell
     private final int index;
     public PacketCell (int index) { this.index = index; }
     public int getIndex() { return index; }
-    public abstract void fromBytes(byte [] bytes);
+    public abstract boolean fromBytes(byte [] bytes);
 }

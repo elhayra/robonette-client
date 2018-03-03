@@ -2,22 +2,23 @@ package com.robonette.argubit.robonette.protocol.CellTypes;
 
 /* unsigned byte representation */
 
-public class UByteCell extends PacketCell
+public class ByteCell extends PacketCell
 {
     public static final int SIZE = 1;
     private byte value;
 
-    public UByteCell(int index) { super(index); }
+    public ByteCell(int index) { super(index); }
 
-    public UByteCell(int index, byte value)
+    public ByteCell(int index, byte value)
     {
         super(index);
         setValue(value);
     }
 
-    public void fromBytes(byte [] bytes)
+    public boolean fromBytes(byte [] bytes)
     {
         value = bytes[getIndex()];
+        return true;
     }
 
     public byte getValue() { return value; }

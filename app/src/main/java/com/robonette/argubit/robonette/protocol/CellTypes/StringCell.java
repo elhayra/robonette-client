@@ -15,13 +15,15 @@ public class StringCell extends PacketCell
         setValue(value);
     }
 
-    public void fromBytes(byte [] bytes)
+    public boolean fromBytes(byte [] bytes)
     {
         /* build sub-arrays for cells size bigger than 1 byte */
         byte [] dataTagArr = Arrays.copyOfRange(bytes,
                 getIndex(),
                 getIndex() + StringCell.SIZE);
         value = new String (dataTagArr);
+
+        return true;
     }
 
     public String getValue() { return value; }

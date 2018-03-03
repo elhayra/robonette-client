@@ -1,6 +1,7 @@
 package com.robonette.argubit.robonette.communication;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,7 +11,7 @@ import java.net.Socket;
 public class TcpClient
 {
     private Socket socket;
-    private BufferedReader inFromServer;
+    private DataInputStream inFromServer;
     private DataOutputStream outToServer;
 
     public boolean connectTo(String srvrIp, int srvrPort)
@@ -24,7 +25,7 @@ public class TcpClient
                 socket = new Socket();
                 socket.connect(inetAddress, 1000);
                 outToServer = new DataOutputStream(socket.getOutputStream());
-                inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                inFromServer = new DataInputStream(socket.getInputStream());
             }
             catch (IOException e)
             {
@@ -65,7 +66,7 @@ public class TcpClient
         return incoming;
     }
 
-    public int readBytes(char [] bytes, int size)
+    public int readBytes(byte [] bytes, int size)
     {
         int bytesRead = 0;
         try
