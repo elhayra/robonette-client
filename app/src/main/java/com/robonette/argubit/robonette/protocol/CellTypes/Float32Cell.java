@@ -1,5 +1,9 @@
 package com.robonette.argubit.robonette.protocol.CellTypes;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
+
 public class Float32Cell extends PacketCell
 {
     public final int SIZE = 4;
@@ -15,6 +19,12 @@ public class Float32Cell extends PacketCell
 
     public boolean fromBytes(byte [] bytes)
     {
+        byte [] trimmedArr = Arrays.copyOfRange(bytes,
+                bytes.length - 8,
+                bytes.length - 4);
+        ByteBuffer wrapped = ByteBuffer.wrap(trimmedArr);
+        wrapped.order(ByteOrder.LITTLE_ENDIAN);
+        value = wrapped.getFloat();
         return true;
     }
 

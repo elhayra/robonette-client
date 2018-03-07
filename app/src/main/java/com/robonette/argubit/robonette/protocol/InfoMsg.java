@@ -94,6 +94,7 @@ public class InfoMsg
                 case FLOAT32:
                 {
                     dataFloat32 = new Float32Cell(DATA_INDEX);
+                    dataFloat32.fromBytes(bytes);
                     break;
                 }
                 case FLOAT64:
