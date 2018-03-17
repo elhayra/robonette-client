@@ -6,20 +6,16 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.robonette.argubit.robonette.communication.TcpClientListener;
-import com.robonette.argubit.robonette.communication.TcpClientSingletone;
-import com.robonette.argubit.robonette.protocol.CellTypes.BoolCell;
-import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
-import com.robonette.argubit.robonette.protocol.CellTypes.Float32Cell;
-import com.robonette.argubit.robonette.protocol.CellTypes.Float64Cell;
-import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;
-import com.robonette.argubit.robonette.protocol.CellTypes.StringCell;
+import com.robonette.argubit.robonette.protocol.ConnectionListener;
+import com.robonette.argubit.robonette.protocol.ConnectionManager;
+import com.robonette.argubit.robonette.protocol.ImgMsg;
 import com.robonette.argubit.robonette.protocol.InfoMsg;
+import com.robonette.argubit.robonette.protocol.RbntHeader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InfoActivity extends AppCompatActivity implements TcpClientListener
+public class InfoActivity extends AppCompatActivity implements ConnectionListener
 {
     private static final String TAG = "InfoActivity";
     private ListView listView;
@@ -40,114 +36,91 @@ public class InfoActivity extends AppCompatActivity implements TcpClientListener
                                           infoArrayList);
         listView.setAdapter(listAdapter);
 
-
-
-        TcpClientSingletone.getInstance().subscribe(this);
+        ConnectionManager.getInstance().subscribe(this);
     }
 
-    private void updateListViewItem(final int index,
-                                    /*final String tag,*/
-                                    final String data
-                                    /*final String units*/)
+    public void onIncomingInfoMsg(InfoMsg infoMsg)
     {
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                View v = listView.getChildAt(index - listView.getFirstVisiblePosition());
+        final String dataVal;
+
+        InfoMsg.DataType dataType = infoMsg.getDataType();
+        switch (dataType)
+        {
+            case INT32:
+            {
+                dataVal = String.valueOf(infoMsg.getDataInt());
+                break;
+            }
+            case FLOAT32:
+            {
+                dataVal = String.valueOf(infoMsg.getDataFloat32());
+                break;
+            }
+            case FLOAT64:
+            {
+                dataVal = String.valueOf(infoMsg.getDataFloat64());
+                break;
+            }
+            case BYTE:
+            {
+                dataVal = String.valueOf(infoMsg.getDataByte());
+                break;
+            }
+            case BOOL:
+            {
+                dataVal = String.valueOf(infoMsg.getDataBool());
+                break;
+            }
+            case STRING:
+            {
+                dataVal = infoMsg.getDataString();
+                break;
+            }
+            default:
+                dataVal = "N/A";
+        }
+
+
+        final String dataTag = infoMsg.getDataTag();
+        final String dataUnits = infoMsg.getDataUnits();
+
+        this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+            // item does not exist, so create it
+            if (!listViewHash.containsKey(dataTag))
+            {
+                listViewHash.put(dataTag, listView.getAdapter().getCount());
+
+                final InfoItem newItem = new InfoItem(dataTag,
+                        dataVal,
+                        dataUnits);
+
+                infoArrayList.add(newItem);
+                listAdapter.notifyDataSetChanged();
+            }
+            else // item exist, so update it
+            {
+                int itemIndx = listViewHash.get(dataTag);
+                View v = listView.getChildAt(itemIndx - listView.getFirstVisiblePosition());
 
                 if(v == null)
                     return;
 
-                //TextView tagTxt = (TextView) v.findViewById(R.id.textView1);
                 TextView dataTxt = (TextView) v.findViewById(R.id.textView2);
-                //TextView unitsTxt = (TextView) v.findViewById(R.id.textView3);
-
-                //tagTxt.setText(tag);
-                dataTxt.setText(data);
-                //unitsTxt.setText(units);
+                dataTxt.setText(dataVal);
+            }
             }
         });
     }
 
-    public void OnTcpConnected(boolean connected) {}
-
-    public void OnTcpIncoming(byte [] bytes)
+    @Override
+    public void onConnectedStatusChanged(boolean status)
     {
-        InfoMsg msg = new InfoMsg();
 
-        final String dataVal;
-        if (msg.fromBytes(bytes))
-        {
-            InfoMsg.DataType dataType = msg.getDataType();
-            switch (dataType)
-            {
-                case INT32:
-                {
-                    dataVal = String.valueOf(msg.getDataInt());
-                    break;
-                }
-                case FLOAT32:
-                {
-                    dataVal = String.valueOf(msg.getDataFloat32());
-                    break;
-                }
-                case FLOAT64:
-                {
-                    dataVal = String.valueOf(msg.getDataFloat64());
-                    break;
-                }
-                case BYTE:
-                {
-                    dataVal = String.valueOf(msg.getDataByte());
-                    break;
-                }
-                case BOOL:
-                {
-                    dataVal = String.valueOf(msg.getDataBool());
-                    break;
-                }
-                case STRING:
-                {
-                    dataVal = msg.getDataString();
-                    break;
-                }
-                default:
-                    dataVal = "N/A";
-            }
-
-            final String dataTag = msg.getDataTag();
-            final String dataUnits = msg.getDataUnits();
-
-            this.runOnUiThread(new Runnable()
-            {
-                public void run()
-                {
-                    // item does not exist, so create it
-                    if (!listViewHash.containsKey(dataTag))
-                    {
-                        listViewHash.put(dataTag, listView.getAdapter().getCount());
-
-                        final InfoItem newItem = new InfoItem(dataTag,
-                                dataVal,
-                                dataUnits);
-
-                        infoArrayList.add(newItem);
-                        listAdapter.notifyDataSetChanged();
-                    }
-                    else // item exist, so update it
-                    {
-                        int itemIndx = listViewHash.get(dataTag);
-                        View v = listView.getChildAt(itemIndx - listView.getFirstVisiblePosition());
-
-                        if(v == null)
-                            return;
-
-                        TextView dataTxt = (TextView) v.findViewById(R.id.textView2);
-                        dataTxt.setText(dataVal);
-                    }
-                }
-            });
-        }
     }
 
 
+    public void onIncomingImgMsg(ImgMsg imgMsg) { /* do nothing */ }
 }

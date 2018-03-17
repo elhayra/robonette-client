@@ -7,29 +7,29 @@ import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.StringCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
 
-public class InfoMsg
+public class InfoMsg implements RbntMsg
 {
     /* TODO: MAYBE TURN THIS INTO IMMUTABLE */
 
     public static final int DATA_SIZE = 8;
-    public static final int SIZE = 49;
+    public static final int SIZE = 50;
 
     /* packet cells */
 
-    ByteCell dataType = new ByteCell(0);
-    StringCell dataTag = new StringCell(dataType.getIndex() + ByteCell.SIZE);
-    StringCell dataUnits = new StringCell(dataTag.getIndex() + StringCell.SIZE);
-    int DATA_INDEX = dataUnits.getIndex() + StringCell.SIZE;
+    private ByteCell dataType = new ByteCell(0);
+    private StringCell dataTag = new StringCell(dataType.getIndex() + ByteCell.SIZE);
+    private StringCell dataUnits = new StringCell(dataTag.getIndex() + StringCell.SIZE);
+    private int DATA_INDEX = dataUnits.getIndex() + StringCell.SIZE;
 
     /* one of this data types will be used dynamically */
     /* according to incoming package data type         */
 
-    Int32Cell dataInt;
-    Float32Cell dataFloat32;
-    Float64Cell dataFloat64;
-    ByteCell dataByte;
-    BoolCell dataBool;
-    StringCell dataString;
+    private Int32Cell dataInt;
+    private Float32Cell dataFloat32;
+    private Float64Cell dataFloat64;
+    private ByteCell dataByte;
+    private BoolCell dataBool;
+    private StringCell dataString;
 
     public DataType getDataType() { return DataType.fromInteger(dataType.getValue()); }
     public String getDataTag() { return dataTag.getValue(); }
@@ -76,11 +76,8 @@ public class InfoMsg
     {
         if (bytes.length == SIZE)
         {
-            /* fetch single byte info from bytes array */
             dataType.fromBytes(bytes);
-
             dataTag.fromBytes(bytes);
-
             dataUnits.fromBytes(bytes);
 
             switch (DataType.fromInteger(dataType.getValue()))

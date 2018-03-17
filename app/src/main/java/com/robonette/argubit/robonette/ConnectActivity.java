@@ -10,12 +10,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.robonette.argubit.robonette.communication.TcpClientListener;
-import com.robonette.argubit.robonette.communication.TcpClientSingletone;
+import com.robonette.argubit.robonette.protocol.ConnectionListener;
+import com.robonette.argubit.robonette.protocol.ConnectionManager;
+import com.robonette.argubit.robonette.protocol.ImgMsg;
 import com.robonette.argubit.robonette.protocol.InfoMsg;
 
 
-public class ConnectActivity extends AppCompatActivity implements TcpClientListener
+public class ConnectActivity extends AppCompatActivity implements ConnectionListener
 {
 
     private static final String TAG = "ConnectActivity";
@@ -55,25 +56,43 @@ public class ConnectActivity extends AppCompatActivity implements TcpClientListe
         int srvrPort = Integer.parseInt(portEditTxt.getText().toString());
         String password = pswdEditTxt.getText().toString();
 
-        TcpClientSingletone.getInstance().subscribe(this);
-        TcpClientSingletone.getInstance().requestConnect(srvrIp, srvrPort, InfoMsg.SIZE);
+        ConnectionManager.getInstance().subscribe(this);
+        ConnectionManager.getInstance().connect(srvrIp, srvrPort, 8192);
 
         connectingPbar.setVisibility(View.VISIBLE);
         connStateTxtView.setVisibility(View.VISIBLE);
         connStateTxtView.setText("Loading...");
     }
 
-    public void OnTcpConnected(boolean connected)
+    public void navigateToInfoActivity()
     {
-        TcpClientSingletone.getInstance().unsubscribe(this);
-        final boolean success = connected;
+        Intent activityIntent = new Intent(this, InfoActivity.class);
+        startActivity(activityIntent);
+    }
+
+    @Override
+    public void onIncomingImgMsg(ImgMsg imgMsg)
+    {
+
+    }
+
+    @Override
+    public void onIncomingInfoMsg(InfoMsg infoMsg)
+    {
+
+    }
+
+    public void onConnectedStatusChanged(boolean status)
+    {
+        ConnectionManager.getInstance().unsubscribe(this);
+        final boolean success = status;
         thisActivity.runOnUiThread(new Runnable() {
             public void run() {
                 if (success)
                 {
                     connectingPbar.setVisibility(View.INVISIBLE);
                     connStateTxtView.setVisibility(View.INVISIBLE);
-                    goToControllerActivity();
+                    navigateToInfoActivity();
                 }
                 else
                 {
@@ -84,13 +103,4 @@ public class ConnectActivity extends AppCompatActivity implements TcpClientListe
             }
         });
     }
-
-    public void OnTcpIncoming(byte[] bytes) {}
-
-    public void goToControllerActivity()
-    {
-        Intent activityIntent = new Intent(this, InfoActivity.class);
-        startActivity(activityIntent);
-    }
-
 }

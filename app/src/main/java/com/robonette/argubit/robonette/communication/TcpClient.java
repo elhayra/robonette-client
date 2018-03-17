@@ -23,7 +23,7 @@ public class TcpClient
             {
                 InetSocketAddress inetAddress = new InetSocketAddress(srvrIp, srvrPort);
                 socket = new Socket();
-                socket.connect(inetAddress, 1000);
+                socket.connect(inetAddress, 6000);
                 outToServer = new DataOutputStream(socket.getOutputStream());
                 inFromServer = new DataInputStream(socket.getInputStream());
             }

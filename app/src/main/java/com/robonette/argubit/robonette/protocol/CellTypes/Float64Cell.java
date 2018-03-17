@@ -2,7 +2,7 @@ package com.robonette.argubit.robonette.protocol.CellTypes;
 
 public class Float64Cell extends PacketCell
 {
-    public final int SIZE = 8;
+    public static final int SIZE = 8;
     private double value;
 
     public Float64Cell(int index) { super(index); }

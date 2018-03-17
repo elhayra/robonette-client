@@ -2,7 +2,7 @@ package com.robonette.argubit.robonette.protocol.CellTypes;
 
 public class BoolCell extends PacketCell
 {
-    public final int SIZE = 1;
+    public static final int SIZE = 1;
     private boolean value;
 
     public BoolCell(int index) { super(index); }

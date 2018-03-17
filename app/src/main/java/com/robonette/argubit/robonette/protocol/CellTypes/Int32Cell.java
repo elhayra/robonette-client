@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Int32Cell extends PacketCell
 {
-    public final int SIZE = 4;
+    public static final int SIZE = 4;
     private int value;
 
     public Int32Cell(int index) { super(index); }
