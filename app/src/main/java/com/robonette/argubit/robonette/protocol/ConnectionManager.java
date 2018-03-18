@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ConnectionManager extends Thread
 {
-    private static final String TAG = "TcpClientSingletone";
+    private static final String TAG = "ConnectionManager";
     private static ConnectionManager instance;
     private TcpClient tcpClient;
     private MsgType waitingMsgType;
@@ -56,7 +56,7 @@ public class ConnectionManager extends Thread
     {
         while (isConnected())
         {
-
+            // handle header
             if (waitingMsgType == MsgType.HEADER)
             {
                 buffSize = RbntHeader.SIZE;
@@ -69,13 +69,13 @@ public class ConnectionManager extends Thread
                     buffSize = header.getMsgSize();
                 }
             }
-            else
+            else // handle msg
             {
                 final byte [] bytes = new byte[buffSize];
                 int bytesRead = tcpClient.readBytes(bytes, buffSize);
-                new Thread() {
+                /*new Thread() {
                     public void run()
-                    {
+                    {*/
                     switch (waitingMsgType)
                     {
                         case INFO:
@@ -89,8 +89,8 @@ public class ConnectionManager extends Thread
                                 notifyIncomingImgMsg(img);
                             break;
                     }
-                    }
-                }.start();
+                   /* }
+                }.start();*/
                 waitingMsgType = MsgType.HEADER;
             }
         }
@@ -107,10 +107,13 @@ public class ConnectionManager extends Thread
                 {
                     Log.i(TAG, "connection success");
                     notifyConnectedStatus(true);
+                    instance.start();
                 }
-                Log.i(TAG, "connection failed");
-                notifyConnectedStatus(false);
-                this.start();
+                else
+                {
+                    Log.i(TAG, "connection failed");
+                    notifyConnectedStatus(false);
+                }
             }
         }.start();
     }

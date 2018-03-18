@@ -12,7 +12,7 @@ public class InfoMsg implements RbntMsg
     /* TODO: MAYBE TURN THIS INTO IMMUTABLE */
 
     public static final int DATA_SIZE = 8;
-    public static final int SIZE = 50;
+    public static final int SIZE = 49;
 
     /* packet cells */
 

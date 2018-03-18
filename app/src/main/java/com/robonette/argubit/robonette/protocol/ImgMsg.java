@@ -2,18 +2,18 @@ package com.robonette.argubit.robonette.protocol;
 
 import com.robonette.argubit.robonette.protocol.CellTypes.BoolCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
+import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.StringCell;
-import com.robonette.argubit.robonette.protocol.CellTypes.UInt32Cell;
 
 public class ImgMsg implements RbntMsg
 {
     public final int INDX_DATA;
     private StringCell tag = new StringCell(0);
     private StringCell encoding = new StringCell(tag.getIndex() + StringCell.SIZE);
-    private UInt32Cell height = new UInt32Cell(encoding.getIndex() + StringCell.SIZE);
-    private UInt32Cell width = new UInt32Cell(height.getIndex() + UInt32Cell.SIZE);
-    private UInt32Cell step = new UInt32Cell(width.getIndex() + UInt32Cell.SIZE);
-    private BoolCell isBigEndian = new BoolCell(step.getIndex() + UInt32Cell.SIZE);
+    private Int32Cell height = new Int32Cell(encoding.getIndex() + StringCell.SIZE);
+    private Int32Cell width = new Int32Cell(height.getIndex() + Int32Cell.SIZE);
+    private Int32Cell step = new Int32Cell(width.getIndex() + Int32Cell.SIZE);
+    private BoolCell isBigEndian = new BoolCell(step.getIndex() + Int32Cell.SIZE);
     private byte [] data;
 
     ImgMsg()
@@ -39,8 +39,8 @@ public class ImgMsg implements RbntMsg
 
         final int dataSize = step.getValue() * height.getValue();
         data = new byte[dataSize];
-        for (int indx = 0; indx < dataSize; indx++)
-            data[indx] = bytes[indx + INDX_DATA];
+        for (int indx = INDX_DATA; indx < dataSize; indx++)
+            data[indx - INDX_DATA] = bytes[indx];
 
         return true;
     }

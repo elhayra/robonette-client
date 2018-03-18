@@ -22,8 +22,8 @@ public class Int32Cell extends PacketCell
     public boolean fromBytes(byte [] bytes)
     {
         byte [] trimmedArr = Arrays.copyOfRange(bytes,
-                bytes.length - 8,
-                bytes.length - 4);
+                getIndex(),
+                getIndex() + SIZE);
         ByteBuffer wrapped = ByteBuffer.wrap(trimmedArr);
         wrapped.order(ByteOrder.LITTLE_ENDIAN);
         value = wrapped.getInt();
