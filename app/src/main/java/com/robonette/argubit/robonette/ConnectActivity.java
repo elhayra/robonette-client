@@ -57,7 +57,7 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
         String password = pswdEditTxt.getText().toString();
 
         ConnectionManager.getInstance().subscribe(this);
-        ConnectionManager.getInstance().connect(srvrIp, srvrPort, 8192);
+        ConnectionManager.getInstance().connect(srvrIp, srvrPort, 20);
 
         connectingPbar.setVisibility(View.VISIBLE);
         connStateTxtView.setVisibility(View.VISIBLE);
@@ -66,7 +66,10 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
 
     public void navigateToInfoActivity()
     {
-        Intent activityIntent = new Intent(this, InfoActivity.class);
+        //Intent activityIntent = new Intent(this, InfoActivity.class);
+        //startActivity(activityIntent);
+
+        Intent activityIntent = new Intent(this, ImgActivity.class);
         startActivity(activityIntent);
     }
 

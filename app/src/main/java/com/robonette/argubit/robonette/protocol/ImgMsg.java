@@ -16,7 +16,7 @@ public class ImgMsg implements RbntMsg
     private BoolCell isBigEndian = new BoolCell(step.getIndex() + Int32Cell.SIZE);
     private byte [] data;
 
-    ImgMsg()
+    ImgMsg()  //TODO: SPLIT THIS MSG FOR COMPRESSED AND UNCOMPRESSED MSGS
     {
         INDX_DATA = isBigEndian.getIndex() + BoolCell.SIZE;
     }
@@ -27,6 +27,7 @@ public class ImgMsg implements RbntMsg
     public int getWidth() { return width.getValue(); }
     public int getStep() { return step.getValue(); }
     public boolean isBigEndian() { return isBigEndian.getValue(); }
+    public byte [] getData() { return data; }
 
     public boolean fromBytes(byte [] bytes)
     {
@@ -37,7 +38,7 @@ public class ImgMsg implements RbntMsg
         step.fromBytes(bytes);
         isBigEndian.fromBytes(bytes);
 
-        final int dataSize = step.getValue() * height.getValue();
+        final int dataSize = /*step.getValue() * */ height.getValue(); //TODO:  RETURN THIS TI HEIGHT * STEP --FOR UNCOMPRESSED IMAGES
         data = new byte[dataSize];
         for (int indx = INDX_DATA; indx < dataSize; indx++)
             data[indx - INDX_DATA] = bytes[indx];

@@ -8,6 +8,7 @@ import com.robonette.argubit.robonette.communication.TcpClient;
 import com.robonette.argubit.robonette.protocol.RbntHeader.MsgType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /* this class get requests from TcpClientListener and notify */
 /* back when action is done. Using singletone allow all      */
@@ -19,7 +20,8 @@ public class ConnectionManager extends Thread
     private static ConnectionManager instance;
     private TcpClient tcpClient;
     private MsgType waitingMsgType;
-    private int buffSize;
+    private int buffSize = 256;
+    private int nextMsgSize;
 
     private ArrayList<ConnectionListener> subscribers;
 
@@ -59,20 +61,31 @@ public class ConnectionManager extends Thread
             // handle header
             if (waitingMsgType == MsgType.HEADER)
             {
-                buffSize = RbntHeader.SIZE;
-                byte [] bytes = new byte[buffSize];
-                int bytesRead = tcpClient.readBytes(bytes, buffSize);
+                byte [] bytes = new byte[RbntHeader.SIZE];
+                int bytesRead = tcpClient.readBytes(bytes,0, RbntHeader.SIZE);
                 RbntHeader header = new RbntHeader();
                 if (header.fromBytes(bytes))
                 {
                     waitingMsgType = header.getMsgType();
-                    buffSize = header.getMsgSize();
+                    nextMsgSize = header.getMsgSize();
                 }
             }
             else // handle msg
             {
-                final byte [] bytes = new byte[buffSize];
-                int bytesRead = tcpClient.readBytes(bytes, buffSize);
+                final byte [] bytes = new byte[nextMsgSize];
+                int bytesRead = 0;
+               // if (nextMsgSize <= buffSize)
+
+                while (bytesRead < nextMsgSize)
+                    bytesRead += tcpClient.readBytes(bytes, bytesRead, nextMsgSize - bytesRead);
+
+
+                Log.i(TAG, "got " + bytesRead + " bytes");
+
+
+                if (bytesRead == nextMsgSize) // delete this test
+                    bytesRead = -1;
+
                 /*new Thread() {
                     public void run()
                     {*/

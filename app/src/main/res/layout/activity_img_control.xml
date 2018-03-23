@@ -5,13 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.robonette.argubit.robonette.InfoActivity">
+    tools:context="com.robonette.argubit.robonette.ImgActivity">
 
     <ImageView
         android:id="@+id/imgView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srcCompat="@android:drawable/divider_horizontal_dark"
-        tools:layout_editor_absoluteX="95dp"
-        tools:layout_editor_absoluteY="124dp" />
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

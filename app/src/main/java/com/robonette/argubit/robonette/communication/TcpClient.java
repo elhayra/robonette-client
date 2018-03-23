@@ -66,12 +66,12 @@ public class TcpClient
         return incoming;
     }
 
-    public int readBytes(byte [] bytes, int size)
+    public int readBytes(byte [] bytes, int offset, int size)
     {
         int bytesRead = 0;
         try
         {
-            bytesRead = inFromServer.read(bytes, 0, size);
+            bytesRead = inFromServer.read(bytes, offset, size);
         } catch (IOException e)
         {
             return -1;
