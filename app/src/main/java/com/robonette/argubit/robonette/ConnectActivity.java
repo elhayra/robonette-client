@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.robonette.argubit.robonette.protocol.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;
 import com.robonette.argubit.robonette.protocol.ConnectionManager;
 import com.robonette.argubit.robonette.protocol.ImgMsg;
@@ -81,6 +82,12 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
 
     @Override
     public void onIncomingInfoMsg(InfoMsg infoMsg)
+    {
+
+    }
+
+    @Override
+    public void onIncomingCompressedImgMsg(CompressedImgMsg compressedImgMsg)
     {
 
     }

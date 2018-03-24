@@ -11,14 +11,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.robonette.argubit.robonette.protocol.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;
 import com.robonette.argubit.robonette.protocol.ConnectionManager;
 import com.robonette.argubit.robonette.protocol.ImgMsg;
 import com.robonette.argubit.robonette.protocol.InfoMsg;
 
 import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-
 
 public class ImgActivity extends AppCompatActivity implements ConnectionListener
 {
@@ -32,13 +31,9 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
         ConnectionManager.getInstance().subscribe(this);
     }
 
-
-
-    @Override
     public void onIncomingImgMsg(ImgMsg imgMsg)
     {
-        ////////////////////////////////////////////FOR UNCOMPRESSED IMAGES
-        /*byte [] imgBytes = imgMsg.getData();
+        byte [] imgBytes = imgMsg.getData();
         int width = imgMsg.getWidth();
         int height = imgMsg.getHeight();
         final Bitmap bitmap = Bitmap.createBitmap  (width, height, Bitmap.Config.ARGB_8888);
@@ -59,7 +54,6 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
 
         }
 
-
         bitmap.setPixels(colors, 0, width, 0, 0, width, height);
 
         this.runOnUiThread(new Runnable()
@@ -68,10 +62,12 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
             {
                 imgView.setImageBitmap(bitmap);
             }
-        });*/
+        });
+    }
 
-        //////////////////////////// FOR COMPRESSED IMAGES
-        byte [] imgBytes = imgMsg.getData();
+    public void onIncomingCompressedImgMsg(CompressedImgMsg compressedImgMsg)
+    {
+        final byte [] imgBytes = compressedImgMsg.getData();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(imgBytes);
         final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
@@ -86,7 +82,6 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
 
     public void onIncomingInfoMsg(InfoMsg infoMsg)
     {
-
 
     }
 

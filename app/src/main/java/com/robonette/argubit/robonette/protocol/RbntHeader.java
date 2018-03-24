@@ -8,11 +8,12 @@ public class RbntHeader implements RbntMsg
 
     public enum MsgType
     {
-        HEADER      (1),
-        INFO        (2),
-        IMAGE       (3),
-        MAP         (4),
-        COMMAND     (5);
+        HEADER          (1),
+        INFO            (2),
+        IMAGE           (3),
+        COMPRESSED_IMG  (4),
+        MAP             (5),
+        COMMAND         (6);
 
         private int value;
         private MsgType(int value) { this.value = value; }
@@ -27,8 +28,10 @@ public class RbntHeader implements RbntMsg
                 case 3:
                     return IMAGE;
                 case 4:
-                    return MAP;
+                    return COMPRESSED_IMG;
                 case 5:
+                    return MAP;
+                case 6:
                     return COMMAND;
             }
             return null;

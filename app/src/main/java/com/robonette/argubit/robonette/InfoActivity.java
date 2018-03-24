@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.robonette.argubit.robonette.protocol.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;
 import com.robonette.argubit.robonette.protocol.ConnectionManager;
 import com.robonette.argubit.robonette.protocol.ImgMsg;
@@ -121,6 +122,10 @@ public class InfoActivity extends AppCompatActivity implements ConnectionListene
 
     }
 
+    public void onIncomingCompressedImgMsg(CompressedImgMsg compressedImgMsg)
+    {
+
+    }
 
     public void onIncomingImgMsg(ImgMsg imgMsg) { /* do nothing */ }
 }

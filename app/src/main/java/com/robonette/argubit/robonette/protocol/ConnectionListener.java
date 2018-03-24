@@ -5,6 +5,7 @@ import android.icu.text.IDNA;
 public interface ConnectionListener
 {
     public void onIncomingImgMsg(ImgMsg imgMsg);
+    public void onIncomingCompressedImgMsg(CompressedImgMsg compressedImgMsg);
     public void onIncomingInfoMsg(InfoMsg infoMsg);
     public void onConnectedStatusChanged(boolean status);
 }

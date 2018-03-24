@@ -74,7 +74,6 @@ public class ConnectionManager extends Thread
             {
                 final byte [] bytes = new byte[nextMsgSize];
                 int bytesRead = 0;
-               // if (nextMsgSize <= buffSize)
 
                 while (bytesRead < nextMsgSize)
                     bytesRead += tcpClient.readBytes(bytes, bytesRead, nextMsgSize - bytesRead);
@@ -100,6 +99,11 @@ public class ConnectionManager extends Thread
                             ImgMsg img = new ImgMsg();
                             if (img.fromBytes(bytes))
                                 notifyIncomingImgMsg(img);
+                            break;
+                        case COMPRESSED_IMG:
+                            CompressedImgMsg compressedImgMsg = new CompressedImgMsg();
+                            if (compressedImgMsg.fromBytes(bytes))
+                                notifyIncomingCompressedImg(compressedImgMsg);
                             break;
                     }
                    /* }
@@ -148,6 +152,12 @@ public class ConnectionManager extends Thread
     {
         for (ConnectionListener listener : subscribers)
             listener.onIncomingImgMsg(imgMsg);
+    }
+
+    private void notifyIncomingCompressedImg(CompressedImgMsg compressedImgMsg)
+    {
+        for (ConnectionListener listener : subscribers)
+            listener.onIncomingCompressedImgMsg(compressedImgMsg);
     }
 
     private void notifyIncomingInfoMsg(InfoMsg infoMsg)
