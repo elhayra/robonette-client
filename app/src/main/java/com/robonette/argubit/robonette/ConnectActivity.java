@@ -54,7 +54,6 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
 
     private EditText ipEditTxt;
     private EditText portEditTxt;
-    private EditText pswdEditTxt;
     private TextView connStateTxtView;
     private ProgressBar connectingPbar;
 
@@ -68,7 +67,6 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
         Button connectBtn = findViewById(R.id.connectBtn);
         ipEditTxt = findViewById(R.id.ipEditTxt);
         portEditTxt = findViewById(R.id.portEditTxt);
-        pswdEditTxt = findViewById(R.id.pswdEditTxt);
         connStateTxtView = findViewById(R.id.connStateTxtView);
         connectingPbar = findViewById(R.id.connectingPbar);
 
@@ -85,7 +83,6 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
     {
         String srvrIp = ipEditTxt.getText().toString();
         int srvrPort = Integer.parseInt(portEditTxt.getText().toString());
-        String password = pswdEditTxt.getText().toString();
 
         ConnectionManager.getInstance().subscribe(this);
         ConnectionManager.getInstance().connect(srvrIp, srvrPort, 20);

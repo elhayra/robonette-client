@@ -30,15 +30,22 @@
 
 package com.robonette.argubit.robonette;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.util.Preconditions;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.robonette.argubit.robonette.protocol.CompressedImgMsg;
@@ -51,13 +58,35 @@ import java.io.ByteArrayInputStream;
 
 public class ImgActivity extends AppCompatActivity implements ConnectionListener
 {
+    boolean strechImgToMatchScreen = true;
     ImageView imgView;
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getSupportActionBar().hide();
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Start activity in landscape mode
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        //set content view AFTER ABOVE sequence (to avoid crash)
         setContentView(R.layout.activity_img_control);
 
         imgView = findViewById(R.id.imgView);
+
+        Switch strechSwitch = findViewById(R.id.stretchSwitch);
+        strechSwitch.setChecked(true);
+        strechSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                strechImgToMatchScreen = isChecked;
+            }
+        });
+
         ConnectionManager.getInstance().subscribe(this);
     }
 
@@ -82,10 +111,24 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
 
     public void onIncomingCompressedImgMsg(CompressedImgMsg compressedImgMsg)
     {
+
         final byte [] imgBytes = compressedImgMsg.getData();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(imgBytes);
         final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-        showBitMap(bitmap);
+
+        // get display dimensions
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+
+        if (strechImgToMatchScreen)
+            showBitMap(Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, false));
+        else
+            showBitMap(bitmap);
+
+
     }
 
     public void showBitMap(final Bitmap bitmap)
