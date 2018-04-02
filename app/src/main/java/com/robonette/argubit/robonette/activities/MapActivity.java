@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
         setContentView(R.layout.activity_map);
 
         mapView = findViewById(R.id.mapView);
-
+        mapView.setZoom(0.99f);
         ConnectionManager.getInstance().subscribe(this);
     }
 
@@ -124,6 +124,7 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
         {
             public void run()
             {
+
                 mapView.setImageBitmap(bitmap);
             }
         });
