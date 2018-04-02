@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package com.robonette.argubit.robonette;
+package activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,12 +36,15 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.robonette.argubit.robonette.protocol.CompressedImgMsg;
+import com.robonette.argubit.robonette.InfoItem;
+import com.robonette.argubit.robonette.InfoListAdapter;
+import com.robonette.argubit.robonette.R;
+import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;
 import com.robonette.argubit.robonette.protocol.ConnectionManager;
-import com.robonette.argubit.robonette.protocol.ImgMsg;
-import com.robonette.argubit.robonette.protocol.InfoMsg;
-import com.robonette.argubit.robonette.protocol.RbntHeader;
+import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
+import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
+import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,6 +147,12 @@ public class InfoActivity extends AppCompatActivity implements ConnectionListene
             }
             }
         });
+    }
+
+    @Override
+    public void onIncomingMapMsg(MapMsg mapMsg)
+    {
+
     }
 
     @Override

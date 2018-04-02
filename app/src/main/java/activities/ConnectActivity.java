@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package com.robonette.argubit.robonette;
+package activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -40,11 +40,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.robonette.argubit.robonette.protocol.CompressedImgMsg;
+import com.robonette.argubit.robonette.R;
+import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;
 import com.robonette.argubit.robonette.protocol.ConnectionManager;
-import com.robonette.argubit.robonette.protocol.ImgMsg;
-import com.robonette.argubit.robonette.protocol.InfoMsg;
+import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
+import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
+import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
 
 public class ConnectActivity extends AppCompatActivity implements ConnectionListener
@@ -97,7 +99,10 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
         //Intent activityIntent = new Intent(this, InfoActivity.class);
         //startActivity(activityIntent);
 
-        Intent activityIntent = new Intent(this, ImgActivity.class);
+        //Intent activityIntent = new Intent(this, ImgActivity.class);
+        //startActivity(activityIntent);
+
+        Intent activityIntent = new Intent(this, MapActivity.class);
         startActivity(activityIntent);
     }
 
@@ -109,6 +114,12 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
 
     @Override
     public void onIncomingInfoMsg(InfoMsg infoMsg)
+    {
+
+    }
+
+    @Override
+    public void onIncomingMapMsg(MapMsg mapMsg)
     {
 
     }

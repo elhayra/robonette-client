@@ -28,9 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package com.robonette.argubit.robonette.protocol;
-
-import android.support.v4.util.Preconditions;
+package com.robonette.argubit.robonette.protocol.messages;
 
 import com.robonette.argubit.robonette.protocol.CellTypes.BoolCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.Float32Cell;

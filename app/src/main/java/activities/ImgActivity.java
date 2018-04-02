@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package com.robonette.argubit.robonette;
+package activities;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -36,23 +36,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.util.Preconditions;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import com.robonette.argubit.robonette.protocol.CompressedImgMsg;
+import com.robonette.argubit.robonette.R;
+import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;
 import com.robonette.argubit.robonette.protocol.ConnectionManager;
-import com.robonette.argubit.robonette.protocol.ImgMsg;
-import com.robonette.argubit.robonette.protocol.InfoMsg;
+import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
+import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
+import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
 import java.io.ByteArrayInputStream;
 
@@ -97,13 +95,14 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
         int height = imgMsg.getHeight();
         final Bitmap bitmap = Bitmap.createBitmap  (width, height, Bitmap.Config.ARGB_8888);
 
-        int[] colors = new int[imgBytes.length];
+        int[] colors = new int[width * height];
         int r,g,b;
-        for (int ci = 0; ci < colors.length-2; ci++)
+        for (int ci = 0; ci < colors.length; ci++)
         {
-            b = (int)(0xFF & imgBytes[ci]);
-            g = (int)(0xFF & imgBytes[ci+1]);
-            r = (int)(0xFF & imgBytes[ci+2]);
+            b = (int)(0xFF & imgBytes[ci*3]);
+            g = (int)(0xFF & imgBytes[ci*3 + 1]);
+            r = (int)(0xFF & imgBytes[ci*3 + 2]);
+            colors[ci] = Color.rgb(r, g, b);
         }
         bitmap.setPixels(colors, 0, width, 0, 0, width, height);
         showBitMap(bitmap);
@@ -143,6 +142,12 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
     }
 
     public void onIncomingInfoMsg(InfoMsg infoMsg)
+    {
+
+    }
+
+    @Override
+    public void onIncomingMapMsg(MapMsg mapMsg)
     {
 
     }

@@ -30,12 +30,16 @@
 
 package com.robonette.argubit.robonette.protocol;
 
-import android.icu.text.IDNA;
+import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
+import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
+import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
+import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
 public interface ConnectionListener
 {
     public void onIncomingImgMsg(ImgMsg imgMsg);
     public void onIncomingCompressedImgMsg(CompressedImgMsg compressedImgMsg);
     public void onIncomingInfoMsg(InfoMsg infoMsg);
+    public void onIncomingMapMsg(MapMsg mapMsg);
     public void onConnectedStatusChanged(boolean status);
 }

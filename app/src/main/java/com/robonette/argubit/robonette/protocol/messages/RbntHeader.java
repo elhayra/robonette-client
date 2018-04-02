@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package com.robonette.argubit.robonette.protocol;
+package com.robonette.argubit.robonette.protocol.messages;
 
 import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;

@@ -32,10 +32,15 @@ package com.robonette.argubit.robonette.protocol;
 import android.util.Log;
 
 import com.robonette.argubit.robonette.communication.TcpClient;
-import com.robonette.argubit.robonette.protocol.RbntHeader.MsgType;
+import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
+import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
+import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
+import com.robonette.argubit.robonette.protocol.messages.MapMsg;
+import com.robonette.argubit.robonette.protocol.messages.RbntHeader;
+import com.robonette.argubit.robonette.protocol.messages.RbntHeader.MsgType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Map;
 
 /* this class get requests from TcpClientListener and notify */
 /* back when action is done. Using singletone allow all      */
@@ -86,7 +91,7 @@ public class ConnectionManager extends Thread
         while (isConnected())
         {
             // handle header
-            if (waitingMsgType == MsgType.HEADER)
+             if (waitingMsgType == MsgType.HEADER)
             {
                 byte [] bytes = new byte[RbntHeader.SIZE];
                 int bytesRead = tcpClient.readBytes(bytes,0, RbntHeader.SIZE);
@@ -109,8 +114,8 @@ public class ConnectionManager extends Thread
                 Log.i(TAG, "got " + bytesRead + " bytes");
 
 
-                if (bytesRead == nextMsgSize) // delete this test
-                    bytesRead = -1;
+                if (bytesRead != nextMsgSize)
+                    continue;
 
                 /*new Thread() {
                     public void run()
@@ -131,6 +136,11 @@ public class ConnectionManager extends Thread
                             CompressedImgMsg compressedImgMsg = new CompressedImgMsg();
                             if (compressedImgMsg.fromBytes(bytes))
                                 notifyIncomingCompressedImg(compressedImgMsg);
+                            break;
+                        case MAP:
+                            MapMsg mapMsg = new MapMsg();
+                            if (mapMsg.fromBytes(bytes))
+                                notifyIncomingMapMsg(mapMsg);
                             break;
                     }
                    /* }
@@ -191,6 +201,12 @@ public class ConnectionManager extends Thread
     {
         for (ConnectionListener listener : subscribers)
             listener.onIncomingInfoMsg(infoMsg);
+    }
+
+    private void notifyIncomingMapMsg(MapMsg mapMsg)
+    {
+        for (ConnectionListener listener : subscribers)
+            listener.onIncomingMapMsg(mapMsg);
     }
 
 }
