@@ -1,6 +1,9 @@
 # built application files
 *.apk
 *.ap_
+.idea/
+build/
+.gradle/
 
 # files for the dex VM
 *.dex
@@ -14,3 +17,4 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+.gitignore.save
