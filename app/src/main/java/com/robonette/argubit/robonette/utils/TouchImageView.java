@@ -51,6 +51,8 @@ public class TouchImageView extends AppCompatImageView
     //
     private static final float SUPER_MIN_MULTIPLIER = .75f;
     private static final float SUPER_MAX_MULTIPLIER = 3.0f;
+    private static final float MIN_SCALE = 1;
+    private static final float MAX_SCALE = 6;
 
     //
     // Scale of image ranges from minScale to maxScale, where minScale == 1
@@ -127,8 +129,8 @@ public class TouchImageView extends AppCompatImageView
         if (mScaleType == null) {
             mScaleType = ScaleType.FIT_CENTER;
         }
-        minScale = 1;
-        maxScale = 6;
+        minScale = MIN_SCALE;
+        maxScale = MAX_SCALE;
         superMinScale = SUPER_MIN_MULTIPLIER * minScale;
         superMaxScale = SUPER_MAX_MULTIPLIER * maxScale;
         setImageMatrix(matrix);

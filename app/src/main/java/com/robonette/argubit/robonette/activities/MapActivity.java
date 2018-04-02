@@ -97,11 +97,20 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
             }
             else
             {
-                int unsignedByte = mapBytes[px] & 0xFF;
-                int x = 255 - (255 * unsignedByte);
+                float p = (float)((mapBytes[px] & 0xFF) / 100.0);
+                int a = 0;
+
+
+                int x = (int)(255.0 - (255.0 * p));
                 r = x;
                 g = x;
                 b = x;
+
+                if (r != b || b != g || p > 1 || p < 0)
+                {
+                    a++;
+                    a = 1;
+                }
             }
             colors[px] = Color.rgb(r, g, b);
         }
