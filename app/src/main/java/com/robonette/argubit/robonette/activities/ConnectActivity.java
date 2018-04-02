@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package activities;
+package com.robonette.argubit.robonette.activities;
 
 import android.app.Activity;
 import android.content.Intent;

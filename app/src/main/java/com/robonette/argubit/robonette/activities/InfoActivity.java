@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package activities;
+package com.robonette.argubit.robonette.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,8 +36,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.robonette.argubit.robonette.InfoItem;
-import com.robonette.argubit.robonette.InfoListAdapter;
+import com.robonette.argubit.robonette.utils.InfoItem;
+import com.robonette.argubit.robonette.utils.InfoListAdapter;
 import com.robonette.argubit.robonette.R;
 import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;

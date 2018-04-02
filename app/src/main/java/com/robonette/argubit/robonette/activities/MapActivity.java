@@ -28,22 +28,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package activities;
+package com.robonette.argubit.robonette.activities;
 
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.Switch;
 
 import com.robonette.argubit.robonette.R;
 import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
@@ -53,12 +47,12 @@ import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
 import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
 import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
-import java.io.ByteArrayInputStream;
+import com.robonette.argubit.robonette.utils.TouchImageView;
 
 public class MapActivity extends AppCompatActivity implements ConnectionListener
 {
     boolean strechMapToMatchScreen = false;
-    ImageView mapView;
+    TouchImageView mapView;
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
