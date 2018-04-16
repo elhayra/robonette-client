@@ -53,6 +53,14 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
 {
     boolean strechMapToMatchScreen = false;
     TouchImageView mapView;
+
+    //background values (for unoccupied spaces in map)
+    final int BR_R = 100;
+    final int BR_G = 150;
+    final int BR_B = 255;
+
+    final int UNOCCUPIED_SPACE = -1;
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -75,11 +83,6 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
     @Override
     public void onIncomingMapMsg(MapMsg mapMsg)
     {
-        final int BR_R = 100;
-        final int BR_G = 150;
-        final int BR_B = 255;
-        final int UNOCCUPIED = -1;
-
         byte [] mapBytes = mapMsg.getData();
         int width = mapMsg.getWidth();
         int height = mapMsg.getHeight();
@@ -89,7 +92,8 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
         int r,g,b;
         for (int px = 0; px < mapBytes.length; px++)
         {
-            if (mapBytes[px] == UNOCCUPIED)
+            // if space marked unoccupied apply background
+            if (mapBytes[px] == UNOCCUPIED_SPACE)
             {
                 r = BR_R;
                 g = BR_G;
@@ -97,20 +101,16 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
             }
             else
             {
-                float p = (float)((mapBytes[px] & 0xFF) / 100.0);
-                int a = 0;
+                // calculations based on this link:
+                // http://wiki.ros.org/map_server#Value_Interpretation
 
+                // convert pixel byte to unsigned byte, and calc p
+                float p = (float)((mapBytes[px] & 0xFF) / 100.0);
 
                 int x = (int)(255.0 - (255.0 * p));
                 r = x;
                 g = x;
                 b = x;
-
-                if (r != b || b != g || p > 1 || p < 0)
-                {
-                    a++;
-                    a = 1;
-                }
             }
             colors[px] = Color.rgb(r, g, b);
         }

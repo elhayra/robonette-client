@@ -31,7 +31,10 @@
 package com.robonette.argubit.robonette.activities;
 
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,6 +60,9 @@ public class InfoActivity extends AppCompatActivity implements ConnectionListene
     ArrayList<InfoItem> infoArrayList;
     InfoListAdapter listAdapter;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle barToggle;
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -71,6 +77,22 @@ public class InfoActivity extends AppCompatActivity implements ConnectionListene
         listView.setAdapter(listAdapter);
 
         ConnectionManager.getInstance().subscribe(this);
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        barToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(barToggle);
+        barToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (barToggle.onOptionsItemSelected(item))
+        {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onIncomingInfoMsg(InfoMsg infoMsg)

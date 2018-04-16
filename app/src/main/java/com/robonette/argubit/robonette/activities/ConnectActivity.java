@@ -96,14 +96,14 @@ public class ConnectActivity extends AppCompatActivity implements ConnectionList
 
     public void navigateToInfoActivity()
     {
-        //Intent activityIntent = new Intent(this, InfoActivity.class);
-        //startActivity(activityIntent);
+        Intent activityIntent = new Intent(this, InfoActivity.class);
+        startActivity(activityIntent);
 
         //Intent activityIntent = new Intent(this, ImgActivity.class);
         //startActivity(activityIntent);
 
-        Intent activityIntent = new Intent(this, MapActivity.class);
-        startActivity(activityIntent);
+        //Intent activityIntent = new Intent(this, MapActivity.class);
+        //startActivity(activityIntent);
     }
 
     @Override
