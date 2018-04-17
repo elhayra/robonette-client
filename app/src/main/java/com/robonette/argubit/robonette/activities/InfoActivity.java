@@ -30,10 +30,13 @@
 
 package com.robonette.argubit.robonette.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -83,15 +86,54 @@ public class InfoActivity extends AppCompatActivity implements ConnectionListene
         drawerLayout.addDrawerListener(barToggle);
         barToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        drawerLayout.closeDrawers();
+
+                        final String selectedTitle = menuItem.getTitle().toString();
+                        navigateTo(selectedTitle);
+
+                        return true;
+                    }
+                });
+
+
+    }
+
+    private void navigateTo(final String title)
+    {
+        if (title.equals("Image Control View"))
+        {
+            Intent activityIntent = new Intent(this, ImgActivity.class);
+            startActivity(activityIntent);
+        }
+        else if (title.equals("Map View"))
+        {
+            Intent activityIntent = new Intent(this, MapActivity.class);
+            startActivity(activityIntent);
+        }
+        else if (title.equals("Disconnect"))
+        {
+            ConnectionManager.getInstance().unsubscribe(this);
+            ConnectionManager.getInstance().close();
+
+            Intent activityIntent = new Intent(this, ConnectActivity.class);
+            startActivity(activityIntent);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if (barToggle.onOptionsItemSelected(item))
-        {
             return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 

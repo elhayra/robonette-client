@@ -174,7 +174,8 @@ public class ConnectionManager extends Thread
 
     public void close()
     {
-        tcpClient.close();
+        if (tcpClient != null)
+            tcpClient.close();
         instance = null;
     }
 
