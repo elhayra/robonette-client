@@ -55,16 +55,13 @@ import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InfoActivity extends AppCompatActivity implements ConnectionListener
+public class InfoActivity extends NavBarActivity implements ConnectionListener
 {
     private static final String TAG = "InfoActivity";
     private ListView listView;
     private HashMap<String, Integer> listViewHash;
     ArrayList<InfoItem> infoArrayList;
     InfoListAdapter listAdapter;
-
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle barToggle;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -80,61 +77,6 @@ public class InfoActivity extends AppCompatActivity implements ConnectionListene
         listView.setAdapter(listAdapter);
 
         ConnectionManager.getInstance().subscribe(this);
-
-        drawerLayout = findViewById(R.id.drawerLayout);
-        barToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(barToggle);
-        barToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // close drawer when item is tapped
-                        drawerLayout.closeDrawers();
-
-                        final String selectedTitle = menuItem.getTitle().toString();
-                        navigateTo(selectedTitle);
-
-                        return true;
-                    }
-                });
-
-
-    }
-
-    private void navigateTo(final String title)
-    {
-        if (title.equals("Image Control View"))
-        {
-            Intent activityIntent = new Intent(this, ImgActivity.class);
-            startActivity(activityIntent);
-        }
-        else if (title.equals("Map View"))
-        {
-            Intent activityIntent = new Intent(this, MapActivity.class);
-            startActivity(activityIntent);
-        }
-        else if (title.equals("Disconnect"))
-        {
-            ConnectionManager.getInstance().unsubscribe(this);
-            ConnectionManager.getInstance().close();
-
-            Intent activityIntent = new Intent(this, ConnectActivity.class);
-            startActivity(activityIntent);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (barToggle.onOptionsItemSelected(item))
-            return true;
-        return super.onOptionsItemSelected(item);
     }
 
     public void onIncomingInfoMsg(InfoMsg infoMsg)

@@ -49,7 +49,7 @@ import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
 import com.robonette.argubit.robonette.utils.TouchImageView;
 
-public class MapActivity extends AppCompatActivity implements ConnectionListener
+public class MapActivity extends NavBarActivity implements ConnectionListener
 {
     boolean strechMapToMatchScreen = false;
     TouchImageView mapView;
@@ -65,10 +65,10 @@ public class MapActivity extends AppCompatActivity implements ConnectionListener
     {
         super.onCreate(savedInstanceState);
         //Remove title bar
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getSupportActionBar().hide();
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //this.getSupportActionBar().hide();
         //Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Start activity in landscape mode
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 

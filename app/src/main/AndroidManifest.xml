@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.InfoActivity">
+        <activity android:name=".activities.MapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,7 +21,7 @@
         </activity>
        <!-- <activity android:name=".activities.InfoActivity"></activity>-->
         <activity android:name=".activities.ImgActivity"></activity>
-        <activity android:name=".activities.MapActivity"></activity>
+        <activity android:name=".activities.InfoActivity"></activity>
     </application>
 
 </manifest>

@@ -54,7 +54,7 @@ import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
 import java.io.ByteArrayInputStream;
 
-public class ImgActivity extends AppCompatActivity implements ConnectionListener
+public class ImgActivity extends NavBarActivity implements ConnectionListener
 {
     boolean strechImgToMatchScreen = true;
     ImageView imgView;
