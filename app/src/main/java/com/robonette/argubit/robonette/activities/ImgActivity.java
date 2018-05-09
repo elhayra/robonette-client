@@ -35,8 +35,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -51,13 +53,15 @@ import com.robonette.argubit.robonette.protocol.ConnectionManager;
 import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
 import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
 import com.robonette.argubit.robonette.protocol.messages.MapMsg;
+import com.robonette.argubit.robonette.utils.JoystickView;
 
 import java.io.ByteArrayInputStream;
 
-public class ImgActivity extends NavBarActivity implements ConnectionListener
+public class ImgActivity extends AppCompatActivity implements ConnectionListener, JoystickView.JoystickListener
 {
     boolean strechImgToMatchScreen = true;
     ImageView imgView;
+    final String TAG = "ImgActivity";
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -156,5 +160,11 @@ public class ImgActivity extends NavBarActivity implements ConnectionListener
     public void onConnectedStatusChanged(boolean status)
     {
 
+    }
+
+    @Override
+    public void onJoystickMoved(float xPercent, float yPercent, int id)
+    {
+        Log.i(TAG, "x: " + xPercent + "| y: " + yPercent);
     }
 }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.robonette.argubit.robonette.activities.ImgActivity"
-    android:id="@+id/drawerLayout">
+
+    tools:context="com.robonette.argubit.robonette.activities.ImgActivity">
+
 
     <ImageView
         android:id="@+id/imgView"
@@ -15,21 +16,39 @@
 
     <Switch
         android:id="@+id/stretchSwitch"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginBottom="450dp"
         android:text="Stretch" />
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:menu="@menu/navigation_menu"
-        android:layout_gravity="start">
+        android:orientation="horizontal">
 
-    </android.support.design.widget.NavigationView>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true">
+
+            <com.robonette.argubit.robonette.utils.JoystickView
+                android:id="@+id/leftJoystick"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_alignParentLeft="true"/>
+
+            <com.robonette.argubit.robonette.utils.JoystickView
+                android:id="@+id/rightJoystick"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 
 
-</android.support.v4.widget.DrawerLayout>
+
+
+</android.support.constraint.ConstraintLayout>

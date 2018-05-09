@@ -49,7 +49,7 @@ import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 
 import com.robonette.argubit.robonette.utils.TouchImageView;
 
-public class MapActivity extends NavBarActivity implements ConnectionListener
+public class MapActivity extends AppCompatActivity implements ConnectionListener
 {
     boolean strechMapToMatchScreen = false;
     TouchImageView mapView;

@@ -109,14 +109,9 @@ public abstract class NavBarActivity extends AppCompatActivity implements MenuIt
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         final String selectedTitle = item.getTitle().toString();
-        if (selectedTitle.equals("Data View"))
+        if (selectedTitle.equals("Image Control View"))
         {
             Intent activityIntent = new Intent(this, ImgActivity.class);
-            startActivity(activityIntent);
-        }
-        else if (selectedTitle.equals("Image Control View"))
-        {
-            Intent activityIntent = new Intent(this, MapActivity.class);
             startActivity(activityIntent);
         }
         else if (selectedTitle.equals("Map View"))
