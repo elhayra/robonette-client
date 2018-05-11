@@ -99,7 +99,7 @@ public class ConnectionManager extends Thread
                 if (header.fromBytes(bytes))
                 {
                     waitingMsgType = header.getMsgType();
-                    nextMsgSize = header.getMsgSize();
+                    nextMsgSize = header.getSize();
                 }
             }
             else // handle msg
@@ -170,6 +170,11 @@ public class ConnectionManager extends Thread
                 }
             }
         }.start();
+    }
+
+    public synchronized boolean sendBytes(byte [] bytes)
+    {
+        return tcpClient.writeBytes(bytes);
     }
 
     public void close()

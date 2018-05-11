@@ -28,49 +28,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package com.robonette.argubit.robonette.protocol.CellTypes;
+package com.robonette.argubit.robonette.protocol.messages;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
+import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
+import com.robonette.argubit.robonette.protocol.CellTypes.Float32Cell;
 
-public class Int32Cell extends PacketCell
+public class CmdMsg implements RbntMsg
 {
-    public static final int SIZE = 4;
-    private int value;
+    public static final int SIZE = ByteCell.SIZE + Float32Cell.SIZE;;
+    public ByteCell id = new ByteCell(0);
+    public Float32Cell value = new Float32Cell(id.getIndex() + ByteCell.SIZE);
 
-    public Int32Cell(int index) { super(index); }
-
-    public Int32Cell(int index, int value)
+    public CmdMsg()
     {
-        super(index);
-        setValue(value);
     }
+
 
     public boolean fromBytes(byte [] bytes)
     {
-        byte [] trimmedArr = Arrays.copyOfRange(bytes,
-                getIndex(),
-                getIndex() + SIZE);
-        ByteBuffer wrapped = ByteBuffer.wrap(trimmedArr);
-        wrapped.order(ByteOrder.LITTLE_ENDIAN);
-        value = wrapped.getInt();
+        id.fromBytes(bytes);
+        value.fromBytes(bytes);
+
         return true;
     }
 
-    public boolean toBytes(byte [] bytes)
+    public byte [] toBytes()
     {
-        if (bytes.length < getIndex() + SIZE)
-            return false;
+        byte bytes [] = new byte[SIZE];
 
-        byte[] valueBytes = ByteBuffer.allocate(SIZE).putInt(value).array();
-        for (int i=0; i<SIZE; i++)
-            bytes[i + getIndex()] = valueBytes[i];
+        id.toBytes(bytes);
+        value.toBytes(bytes);
 
-        return true;
+        return bytes;
     }
 
-    public int getValue() { return value; }
-
-    public void setValue(int value) { this.value = value; }
 }

@@ -47,12 +47,14 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import com.robonette.argubit.robonette.R;
+import com.robonette.argubit.robonette.protocol.messages.CmdMsg;
 import com.robonette.argubit.robonette.protocol.messages.CompressedImgMsg;
 import com.robonette.argubit.robonette.protocol.ConnectionListener;
 import com.robonette.argubit.robonette.protocol.ConnectionManager;
 import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
 import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
 import com.robonette.argubit.robonette.protocol.messages.MapMsg;
+import com.robonette.argubit.robonette.protocol.messages.RbntHeader;
 import com.robonette.argubit.robonette.utils.JoystickView;
 
 import java.io.ByteArrayInputStream;
@@ -62,6 +64,10 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
     boolean strechImgToMatchScreen = true;
     ImageView imgView;
     final String TAG = "ImgActivity";
+    final int JOY_MSG_INTERVAL = 50; //20hz
+
+    long leftJoyEventTime;
+    long rightJoyEventTime;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -90,6 +96,9 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
         });
 
         ConnectionManager.getInstance().subscribe(this);
+
+        leftJoyEventTime = System.currentTimeMillis();
+        rightJoyEventTime = System.currentTimeMillis();
     }
 
     public void onIncomingImgMsg(ImgMsg imgMsg)
@@ -163,8 +172,74 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
     }
 
     @Override
-    public void onJoystickMoved(float xPercent, float yPercent, int id)
+    public void onJoystickMoved(final float xPercent, final float yPercent, int id)
     {
         Log.i(TAG, "x: " + xPercent + "| y: " + yPercent);
+
+        long now = System.currentTimeMillis();
+
+        RbntHeader header = new RbntHeader();
+        header.setMsgType(RbntHeader.MsgType.COMMAND);
+        header.setMsgSize(CmdMsg.SIZE);
+        final byte [] headerBytes = header.toBytes();
+
+
+        if (id == R.id.rightJoystick)
+        {
+            if (now - rightJoyEventTime >= JOY_MSG_INTERVAL)
+            {
+                (new Thread() {
+                    public void run() {
+                        ConnectionManager.getInstance().sendBytes(headerBytes);
+
+                        CmdMsg xCmdMsg = new CmdMsg();
+                        xCmdMsg.id.setValue((byte)20);
+                        xCmdMsg.value.setValue(xPercent);
+                        byte [] xCmdBytes = xCmdMsg.toBytes();
+
+                        ConnectionManager.getInstance().sendBytes(xCmdBytes);
+
+
+                        ConnectionManager.getInstance().sendBytes(headerBytes);
+
+                        CmdMsg yCmdMsg = new CmdMsg();
+                        yCmdMsg.id.setValue((byte)21);
+                        yCmdMsg.value.setValue(yPercent);
+                        byte [] yCmdBytes = xCmdMsg.toBytes();
+
+                        ConnectionManager.getInstance().sendBytes(yCmdBytes);
+                    }
+                }).start();
+
+            }
+        }
+        else if (id == R.id.leftJoystick)
+        {
+            if (now - leftJoyEventTime >= JOY_MSG_INTERVAL)
+            {
+                (new Thread() {
+                    public void run() {
+                        ConnectionManager.getInstance().sendBytes(headerBytes);
+
+                        CmdMsg xCmdMsg = new CmdMsg();
+                        xCmdMsg.id.setValue((byte)10);
+                        xCmdMsg.value.setValue(xPercent);
+                        byte [] xCmdBytes = xCmdMsg.toBytes();
+
+                        ConnectionManager.getInstance().sendBytes(xCmdBytes);
+
+                        ConnectionManager.getInstance().sendBytes(headerBytes);
+
+                        CmdMsg yCmdMsg = new CmdMsg();
+                        yCmdMsg.id.setValue((byte)11);
+                        yCmdMsg.value.setValue(yPercent);
+                        byte [] yCmdBytes = xCmdMsg.toBytes();
+
+                        ConnectionManager.getInstance().sendBytes(yCmdBytes);
+                    }
+                }).start();
+
+            }
+        }
     }
 }

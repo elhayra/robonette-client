@@ -32,6 +32,8 @@ package com.robonette.argubit.robonette.protocol.CellTypes;
 
 /* unsigned byte representation */
 
+import java.nio.ByteBuffer;
+
 public class ByteCell extends PacketCell
 {
     public static final int SIZE = 1;
@@ -48,6 +50,16 @@ public class ByteCell extends PacketCell
     public boolean fromBytes(byte [] bytes)
     {
         value = bytes[getIndex()];
+        return true;
+    }
+
+    public boolean toBytes(byte [] bytes)
+    {
+        if (bytes.length < getIndex() + SIZE)
+            return false;
+
+        bytes[getIndex()] = value;
+
         return true;
     }
 

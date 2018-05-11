@@ -58,6 +58,18 @@ public class Float32Cell extends PacketCell
         return true;
     }
 
+    public boolean toBytes(byte [] bytes)
+    {
+        if (bytes.length < getIndex() + SIZE)
+            return false;
+
+        byte[] valueBytes = ByteBuffer.allocate(SIZE).putFloat(value).array();
+        for (int i=0; i<SIZE; i++)
+            bytes[i + getIndex()] = valueBytes[i];
+
+        return true;
+    }
+
     public float getValue() { return value; }
 
     public void setValue(float value) { this.value = value; }

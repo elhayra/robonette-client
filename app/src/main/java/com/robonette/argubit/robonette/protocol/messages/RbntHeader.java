@@ -76,12 +76,13 @@ public class RbntHeader implements RbntMsg
     public static final int VALID_HEADER_START = 0x01;
 
     private Int32Cell headerStart = new Int32Cell(INDX_HEADER_START);
-    private ByteCell msgType = new ByteCell(INDX_MSG_TYPE);
-    private Int32Cell msgSize = new Int32Cell(INDX_MSG_SIZE);
+    public ByteCell msgType = new ByteCell(INDX_MSG_TYPE);
+    public Int32Cell msgSize = new Int32Cell(INDX_MSG_SIZE);
 
     public MsgType getMsgType() { return MsgType.fromInteger(msgType.getValue()); }
-    public int getMsgSize() { return msgSize.getValue(); }
-
+    public int getSize() { return msgSize.getValue(); }
+    public void setMsgType(MsgType type) { msgType.setValue((byte)type.ordinal()); }
+    public void setMsgSize(int size) { msgSize.setValue(size); }
 
     /* return true if header is valid */
     public boolean fromBytes(byte[] bytes)
@@ -97,6 +98,18 @@ public class RbntHeader implements RbntMsg
            return false;
 
         return true;
+    }
+
+    public byte [] toBytes()
+    {
+        byte bytes[] = new byte[SIZE];
+
+        headerStart.setValue(VALID_HEADER_START);
+        headerStart.toBytes(bytes);
+        msgType.toBytes(bytes);
+        msgSize.toBytes(bytes);
+
+        return bytes;
     }
 
 }

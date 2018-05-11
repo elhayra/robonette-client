@@ -69,10 +69,17 @@ public class TcpClient
         return true;
     }
 
-    public boolean isConnected() { return socket.isConnected(); }
+    public boolean isConnected()
+    {
+        if (socket == null)
+            return false;
+        return socket.isConnected();
+    }
 
     public boolean writeBytes(byte[] byteArr)
     {
+        if (!isConnected())
+            return false;
         try
         {
             outToServer.write(byteArr);
@@ -85,6 +92,8 @@ public class TcpClient
 
     public int readByte()
     {
+        if (!isConnected())
+            return -1;
         int incoming = -1;
         try
         {
@@ -98,6 +107,8 @@ public class TcpClient
 
     public int readBytes(byte [] bytes, int offset, int size)
     {
+        if (!isConnected())
+            return 0;
         int bytesRead = 0;
         try
         {
@@ -111,6 +122,8 @@ public class TcpClient
 
     public void close()
     {
+        if (!isConnected())
+            return;
         try
         {
             socket.close();
