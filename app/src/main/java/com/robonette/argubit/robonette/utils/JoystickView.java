@@ -1,14 +1,12 @@
 package com.robonette.argubit.robonette.utils;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -41,6 +39,8 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
         setOnTouchListener(this);
         if(context instanceof JoystickListener)
             joystickCallback = (JoystickListener) context;
+
+        makeBackgroundTransparent();
     }
 
     public JoystickView(Context context, AttributeSet attributes, int style)
@@ -50,6 +50,8 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
         setOnTouchListener(this);
         if(context instanceof JoystickListener)
             joystickCallback = (JoystickListener) context;
+
+        makeBackgroundTransparent();
     }
 
     public JoystickView (Context context, AttributeSet attributes)
@@ -59,6 +61,15 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
         setOnTouchListener(this);
         if(context instanceof JoystickListener)
             joystickCallback = (JoystickListener) context;
+
+        makeBackgroundTransparent();
+    }
+
+    private void makeBackgroundTransparent()
+    {
+        this.setBackgroundColor(Color.TRANSPARENT);
+        this.setZOrderOnTop(true);
+        getHolder().setFormat(PixelFormat.TRANSPARENT);
     }
 
     private void drawJoystick(float newX, float newY)
@@ -68,6 +79,8 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
             Canvas myCanvas = this.getHolder().lockCanvas(); //Stuff to draw
             Paint colors = new Paint();
             myCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); // Clear the BG
+
+
 
             //First determine the sin and cos of the angle that the touched point is at relative to the center of the joystick
             float hypotenuse = (float) Math.sqrt(Math.pow(newX - centerX, 2) + Math.pow(newY - centerY, 2));
