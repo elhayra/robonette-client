@@ -55,19 +55,27 @@ import com.robonette.argubit.robonette.protocol.messages.ImgMsg;
 import com.robonette.argubit.robonette.protocol.messages.InfoMsg;
 import com.robonette.argubit.robonette.protocol.messages.MapMsg;
 import com.robonette.argubit.robonette.protocol.messages.RbntHeader;
+import com.robonette.argubit.robonette.utils.JoystickData;
+import com.robonette.argubit.robonette.utils.JoystickSenderTask;
 import com.robonette.argubit.robonette.utils.JoystickView;
 
 import java.io.ByteArrayInputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ImgActivity extends AppCompatActivity implements ConnectionListener, JoystickView.JoystickListener
 {
     boolean strechImgToMatchScreen = true;
     ImageView imgView;
     final String TAG = "ImgActivity";
-    final int JOY_MSG_INTERVAL = 50; //20hz
+    final int JOY_UPDATE_HZ = 20;
 
     long leftJoyEventTime;
     long rightJoyEventTime;
+
+    Timer joystickTimer;
+    JoystickSenderTask joyUpdateTask;
+    Thread joySenderThread;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -99,6 +107,10 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
 
         leftJoyEventTime = System.currentTimeMillis();
         rightJoyEventTime = System.currentTimeMillis();
+
+        joystickTimer = new Timer();
+        joyUpdateTask = new JoystickSenderTask();
+        joystickTimer.scheduleAtFixedRate(joyUpdateTask, 0, 1000 / JOY_UPDATE_HZ);
     }
 
     public void onIncomingImgMsg(ImgMsg imgMsg)
@@ -171,8 +183,7 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
 
     }
 
-    @Override
-    public void onJoystickMoved(final float xPercent, final float yPercent, int id)
+    public synchronized void sendJoystickCommands(final float xPercent, final float yPercent, int id)
     {
         Log.i(TAG, "x: " + xPercent + "| y: " + yPercent);
 
@@ -183,13 +194,10 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
         header.setMsgSize(CmdMsg.SIZE);
         final byte [] headerBytes = header.toBytes();
 
-
         if (id == R.id.rightJoystick)
         {
-            if (now - rightJoyEventTime >= JOY_MSG_INTERVAL)
+            if (now - rightJoyEventTime >= 1)
             {
-                (new Thread() {
-                    public void run() {
                         ConnectionManager.getInstance().sendBytes(headerBytes);
 
                         CmdMsg xCmdMsg = new CmdMsg();
@@ -205,20 +213,18 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
                         CmdMsg yCmdMsg = new CmdMsg();
                         yCmdMsg.id.setValue((byte)21);
                         yCmdMsg.value.setValue(yPercent);
-                        byte [] yCmdBytes = xCmdMsg.toBytes();
+                        byte [] yCmdBytes = yCmdMsg.toBytes();
 
                         ConnectionManager.getInstance().sendBytes(yCmdBytes);
-                    }
-                }).start();
+
 
             }
         }
         else if (id == R.id.leftJoystick)
         {
-            if (now - leftJoyEventTime >= JOY_MSG_INTERVAL)
+            if (now - leftJoyEventTime >= 1)
             {
-                (new Thread() {
-                    public void run() {
+
                         ConnectionManager.getInstance().sendBytes(headerBytes);
 
                         CmdMsg xCmdMsg = new CmdMsg();
@@ -233,13 +239,17 @@ public class ImgActivity extends AppCompatActivity implements ConnectionListener
                         CmdMsg yCmdMsg = new CmdMsg();
                         yCmdMsg.id.setValue((byte)11);
                         yCmdMsg.value.setValue(yPercent);
-                        byte [] yCmdBytes = xCmdMsg.toBytes();
+                        byte [] yCmdBytes = yCmdMsg.toBytes();
 
                         ConnectionManager.getInstance().sendBytes(yCmdBytes);
-                    }
-                }).start();
 
             }
         }
+    }
+
+    public void onJoystickMoved(final float xPercent, final float yPercent, final int id)
+    {
+        Log.i("joy0: ", "x: " + xPercent + "| y: " + yPercent);
+        joyUpdateTask.updateJoystickState(xPercent, yPercent, id);
     }
 }

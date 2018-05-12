@@ -81,7 +81,7 @@ public class RbntHeader implements RbntMsg
 
     public MsgType getMsgType() { return MsgType.fromInteger(msgType.getValue()); }
     public int getSize() { return msgSize.getValue(); }
-    public void setMsgType(MsgType type) { msgType.setValue((byte)type.ordinal()); }
+    public void setMsgType(MsgType type) { msgType.setValue((byte)type.getValue()); }
     public void setMsgSize(int size) { msgSize.setValue(size); }
 
     /* return true if header is valid */

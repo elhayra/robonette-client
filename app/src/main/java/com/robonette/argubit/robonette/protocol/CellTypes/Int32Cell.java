@@ -65,7 +65,7 @@ public class Int32Cell extends PacketCell
 
         byte[] valueBytes = ByteBuffer.allocate(SIZE).putInt(value).array();
         for (int i=0; i<SIZE; i++)
-            bytes[i + getIndex()] = valueBytes[i];
+            bytes[i + getIndex()] = valueBytes[SIZE-1 - i]; // insert bytes in reverse order (big endian)
 
         return true;
     }
