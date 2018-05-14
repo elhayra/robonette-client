@@ -73,7 +73,7 @@ public class RbntHeader implements RbntMsg
     public static final int INDX_MSG_TYPE = INDX_HEADER_START + Int32Cell.SIZE;
     public static final int INDX_MSG_SIZE = INDX_MSG_TYPE + ByteCell.SIZE;
 
-    public static final int VALID_HEADER_START = 0x01;
+    public static final int VALID_HEADER_START = 0x446535D0; //1147483600
 
     private Int32Cell headerStart = new Int32Cell(INDX_HEADER_START);
     public ByteCell msgType = new ByteCell(INDX_MSG_TYPE);

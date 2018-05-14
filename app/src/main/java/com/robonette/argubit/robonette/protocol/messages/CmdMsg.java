@@ -32,12 +32,15 @@ package com.robonette.argubit.robonette.protocol.messages;
 
 import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.Float32Cell;
+import com.robonette.argubit.robonette.protocol.Crc8;
 
 public class CmdMsg implements RbntMsg
 {
-    public static final int SIZE = ByteCell.SIZE + Float32Cell.SIZE;;
+    public static final int SIZE = (ByteCell.SIZE * 2) + Float32Cell.SIZE;
+
     public ByteCell id = new ByteCell(0);
     public Float32Cell value = new Float32Cell(id.getIndex() + ByteCell.SIZE);
+    public ByteCell checksum = new ByteCell(value.getIndex() + Float32Cell.SIZE);
 
     public CmdMsg()
     {
@@ -49,6 +52,12 @@ public class CmdMsg implements RbntMsg
         id.fromBytes(bytes);
         value.fromBytes(bytes);
 
+        checksum.fromBytes(bytes);
+        Crc8 crc = new Crc8();
+        byte calcedChecksum = crc.calcChecksum(bytes, 0, checksum.getIndex());
+        if (calcedChecksum != checksum.getValue())
+            return false;
+
         return true;
     }
 
@@ -58,6 +67,11 @@ public class CmdMsg implements RbntMsg
 
         id.toBytes(bytes);
         value.toBytes(bytes);
+
+        Crc8 crc = new Crc8();
+        byte calcedChecksum = crc.calcChecksum(bytes, 0, checksum.getIndex());
+        checksum.setValue(calcedChecksum);
+        checksum.toBytes(bytes);
 
         return bytes;
     }

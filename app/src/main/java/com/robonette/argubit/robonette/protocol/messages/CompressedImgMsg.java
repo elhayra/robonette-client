@@ -32,6 +32,7 @@ package com.robonette.argubit.robonette.protocol.messages;
 
 import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.StringCell;
+import com.robonette.argubit.robonette.protocol.Crc8;
 import com.robonette.argubit.robonette.protocol.messages.RbntMsg;
 
 public class CompressedImgMsg implements RbntMsg
@@ -63,6 +64,12 @@ public class CompressedImgMsg implements RbntMsg
         data = new byte[imgSize];
         for (int indx = INDX_DATA; indx < imgSize; indx++)
             data[indx - INDX_DATA] = bytes[indx];
+
+        byte checksum = bytes[INDX_DATA + imgSize];
+        Crc8 crc = new Crc8();
+        byte calcedChecksum = crc.calcChecksum(bytes, 0, checksum);
+        if (calcedChecksum != checksum)
+            return false;
 
         return true;
     }

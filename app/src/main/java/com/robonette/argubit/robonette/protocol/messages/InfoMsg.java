@@ -36,6 +36,7 @@ import com.robonette.argubit.robonette.protocol.CellTypes.Float64Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.StringCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
+import com.robonette.argubit.robonette.protocol.Crc8;
 
 public class InfoMsg implements RbntMsg
 {
@@ -110,41 +111,55 @@ public class InfoMsg implements RbntMsg
             dataTag.fromBytes(bytes);
             dataUnits.fromBytes(bytes);
 
+            int dataSize = 0;
             switch (DataType.fromInteger(dataType.getValue()))
             {
                 case INT32:
                 {
                     dataInt = new Int32Cell(DATA_INDEX);
                     dataInt.fromBytes(bytes);
+                    dataSize = Int32Cell.SIZE;
                     break;
                 }
                 case FLOAT32:
                 {
                     dataFloat32 = new Float32Cell(DATA_INDEX);
                     dataFloat32.fromBytes(bytes);
+                    dataSize = Float32Cell.SIZE;
                     break;
                 }
                 case FLOAT64:
                 {
                     dataFloat64 = new Float64Cell(DATA_INDEX);
+                    dataSize = Float64Cell.SIZE;
                     break;
                 }
                 case BYTE:
                 {
                     dataByte = new ByteCell(DATA_INDEX);
+                    dataSize = ByteCell.SIZE;
                     break;
                 }
                 case BOOL:
                 {
                     dataBool = new BoolCell(DATA_INDEX);
+                    dataSize = BoolCell.SIZE;
                     break;
                 }
                 case STRING:
                 {
                     dataString = new StringCell(DATA_INDEX);
+                    dataSize = StringCell.SIZE;
                     break;
                 }
             }
+
+            byte checksum = bytes[dataType.getIndex() + dataSize];
+            Crc8 crc = new Crc8();
+            byte calcedChecksum = crc.calcChecksum(bytes, 0, checksum);
+            if (calcedChecksum != checksum)
+                return false;
+
             return true;
         }
         return false;

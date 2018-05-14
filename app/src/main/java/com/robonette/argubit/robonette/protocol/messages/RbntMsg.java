@@ -30,6 +30,8 @@
 
 package com.robonette.argubit.robonette.protocol.messages;
 
+import com.robonette.argubit.robonette.protocol.CellTypes.ByteCell;
+
 public interface RbntMsg
 {
     boolean fromBytes(byte [] bytes);

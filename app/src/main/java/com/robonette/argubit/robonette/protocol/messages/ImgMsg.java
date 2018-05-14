@@ -33,6 +33,7 @@ package com.robonette.argubit.robonette.protocol.messages;
 import com.robonette.argubit.robonette.protocol.CellTypes.BoolCell;
 import com.robonette.argubit.robonette.protocol.CellTypes.Int32Cell;
 import com.robonette.argubit.robonette.protocol.CellTypes.StringCell;
+import com.robonette.argubit.robonette.protocol.Crc8;
 
 public class ImgMsg implements RbntMsg
 {
@@ -71,6 +72,13 @@ public class ImgMsg implements RbntMsg
         data = new byte[dataSize];
         for (int indx = INDX_DATA; indx < dataSize; indx++)
             data[indx - INDX_DATA] = bytes[indx];
+
+        byte checksum = bytes[INDX_DATA + dataSize];
+        Crc8 crc = new Crc8();
+        byte calcedChecksum = crc.calcChecksum(bytes, 0, checksum);
+        if (calcedChecksum != checksum)
+            return false;
+
 
         return true;
     }
